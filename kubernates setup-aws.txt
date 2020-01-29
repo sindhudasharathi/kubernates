@@ -7,6 +7,8 @@ kubernates setup in AWS:
     kops works only on mac/linux
  
    kops stands for kubernates operations
+   
+   kubectl used for cli purpose
 
 1. create linux t2.micro instance, connect to the instance
    --------------------------------------------------------
