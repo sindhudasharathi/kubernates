@@ -1,0 +1,130 @@
+
+kubernates setup in AWS:
+=========================
+
+    to setup kubernates on aws we use a tool called kops
+
+    kops works only on mac/linux
+ 
+   kops stands for kubernates operations
+
+1. create linux t2.micro instance, connect to the instance
+   --------------------------------------------------------
+
+2. download kops for linux machine
+   --------------------------------
+
+     curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kub ectl 
+
+3. download kubectl for linux
+   ---------------------------------------
+
+  wget https://github.com/kubernetes/kops/releases/download/1.12.3/kops-linux-amd64 
+
+4. give execute permissions to kubectl and kops
+   ----------------------------------------------------
+   
+   chmod 700 kubectl 
+
+   chmod 700 kops-linux-amd64 
+
+5. move the kubectl and kops to sbin folder
+   ----------------------------------------------
+
+   sudo mv kops-linux-amd64 /usr/local/sbin/kops
+   sudo mv kops-linux-amd64 /usr/local/sbin/kubectl
+
+6. install python-pip..python-pip allows me to download aws-cli
+   ---------------------------------------------------------------
+  
+  sudo apt-get update
+  sudo apt-get install python-pip
+
+   install aws cli
+   -----------------
+    
+   sudo pip install awscli
+
+ or else use amazon-linux machine it contains predefined awscli
+  
+
+7. create an IAM user or role
+   ------------------------------------
+   
+    let us create user and give the administrator access
+    we will get access key id and secret access key
+
+8. aws configure
+   ------------------- 
+
+
+9. create the s3 bucket which will store the state of cluster
+   ---------------------------------------------------------------- 
+
+   go to asw console create bucket
+   kops-state-94
+
+10. kops expectsthe domain name so we create the domain in route53
+    --------------------------------------------------------------
+
+   create a hosted zone in route53 i.e.., kubernates.uday
+
+11. create the public key which helps to login to your cluster
+   -----------------------------------------------------------------
+
+      ssh-keygen
+
+12. create the cluster 
+   ---------------------------
+
+             kops create cluster --name=kubernates.uday --state=s3://kops-state-94 --zones=ap-south-1a --node-count=1 --node-size=t2.micro --dns-zone=kubernates.uday         --dns private 
+
+13. update the cluster
+    -------------------
+
+    kops update cluster kubernates.uday --yes --state=s3://kops-state-94 
+
+14. delete the cluster
+    ------------------------
+
+kops delete cluster --name kubernates.uday --state=s3://kops-state-94 --yes 
+
+15. to edit the cluster
+    ----------------------
+    
+    kops edit cluster kubernates.uday
+
+16. list the cluster
+    -------------------------
+          
+      kops get cluster
+
+17.  edit your node instance group:
+     -------------------------------------------
+
+      kops edit ig --name=kubernates.uday nodes
+
+18. edit your master instance group:
+    ---------------------------------------------------- 
+
+      kops edit ig --name=kubernates.uday master-ap-south-1a
+
+19.  to update the cluster
+     -----------------------
+
+    kops rolling update cluster --state=s3://kops-state-94 --yes
+
+
+note:  cluster name and DNS name should be same
+
+
+
+
+
+
+
+
+
+
+
+
